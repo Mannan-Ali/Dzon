@@ -56,7 +56,8 @@ describe("Dzon", function () {
 
     //deploying the contract
     const Dapp = await ethers.getContractFactory("Dzon");
-    dApp = await Dapp.deploy();
+    dApp = await Dapp.deploy();//here it takes 1st acc from hardhat network as owner or msg.sender and we take the same acc in deployer also as you can see up
+    // dApp = await Dapp.connect(deployer).deploy();
     /*
     Connect the contract instance to the deployer account
     const deployerContract = dApp.connect(deployer);
@@ -69,7 +70,8 @@ describe("Dzon", function () {
     it("Cheking the owner : ", async () => {
       // But you never specified the deployer! How does Hardhat decide?
       // (see up in the comments)Hardhat automatically uses the first account in the
-      //  list of signers as the default deployer unless you explicitly specify a different account.
+      //  list of signers as the default unless you explicitly specify a different account
+      //and as deployer is also specified as the first acc from singers so both should be same 
       expect(await dApp.owner()).to.equal(deployer.address);
     })
     //READ FOR HIW TO USE EXPECT
@@ -87,6 +89,10 @@ describe("Dzon", function () {
     let transaction;
     beforeEach(async () => {
       // List a item
+      //if you change deployer to buyer it wont work 
+      // as we speiced in the modifier that only the deployer acc 
+      // or more specifically the 1st acc that gets set when calling dApp.deploy() from hardhat netwrok
+      //is stored in owner and owner == 1st acc (deployer) or else break 
       transaction = await dApp.connect(deployer).list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
       await transaction.wait();
     })
@@ -102,5 +108,12 @@ describe("Dzon", function () {
       console.log(item);
     })
 
+    it("Emits List event", () => {
+      expect(transaction).to.emit(dApp, "List")//.emit is used to check if an event was triggered during the execution of a transaction
+    })
+    // it("Should not allow non-owners to list products", async () => {
+    //   // Trying to list by the buyer (non-owner)
+    //   const x = await dApp.connect(buyer).list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
+    // });
   })
 });
