@@ -1,8 +1,12 @@
 
 /SmartContract folder
+
 1.ERC-121 STANDARD :- We are using this to create the non fungible tokens 
 
 2. I.P.F.S : (decentralized file storage system) mainly to store the image so less data size to upload
     =>Now we dont want to store the meta data(like extra information about the real estate property like size of each room etc) on the block so will 
     =>will store it here and then put a reference in the block so can be accessed
     =>same way as we store URL for image or vidoe on mongodb but the video is on cloudinary but they are just centralized this one isnt
+
+
+3.for test/Dzon.js 

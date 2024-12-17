@@ -108,12 +108,42 @@ describe("Dzon", function () {
       console.log(item);
     })
 
-    it("Emits List event", () => {
+    it("Emits List event", async () => {
       expect(transaction).to.emit(dApp, "List")//.emit is used to check if an event was triggered during the execution of a transaction
     })
     // it("Should not allow non-owners to list products", async () => {
     //   // Trying to list by the buyer (non-owner)
     //   const x = await dApp.connect(buyer).list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
     // });
+  })
+  describe("Check Buying of Product : ", () => {
+    let transaction,dAppAddress,initialBalance;
+    beforeEach(async () => {
+      //as a contract that you’re deploying, so you should get its address using this way not normal dApp.address
+      dAppAddress = await dApp.getAddress();
+      //list item for to execute buy
+      transaction = await dApp.connect(deployer).list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
+      await transaction.wait();
+      //buy product call
+      // ethers.provider.getBalance :is a function provided by the Ethers.js library to check the Ether balance of a given Ethereum address (e.g., a wallet or smart contract address).
+      initialBalance = await ethers.provider.getBalance(dAppAddress);
+      //In the Ethereum blockchain, when a transaction is sent to a smart contract, the sender can attach Ether to the transaction using the value field.
+      //Note value parameter only accepts in wei value
+      //the buyer can send any amount of ether(in wei) here it can be less
+      transaction = await dApp.connect(buyer).buyProduct(ID,{ value : COST });
+      await transaction.wait();
+    })
+
+    it("Updates the contracts balance ", async () => {
+      console.log("Old Ethe value in contract acc : ",initialBalance);
+      const newBalance = await ethers.provider.getBalance(dAppAddress);
+      console.log("New Balance:", newBalance);
+      const checkCost= newBalance - initialBalance;
+      console.log("CheckCost Balance:", checkCost);
+      
+      // Check if the balance increased by COST
+      expect(checkCost).to.equal(COST);
+    })
+
   })
 });

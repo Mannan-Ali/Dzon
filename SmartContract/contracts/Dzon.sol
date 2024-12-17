@@ -10,7 +10,10 @@ contract Dzon {
 
     address public owner;
 
+    //struct
+
     //defining my own datatype
+
     struct Item {
         uint256 id; //id of product
         string name; //name of product
@@ -20,6 +23,9 @@ contract Dzon {
         uint256 rating;
         uint256 stock; //how much product available
     }
+
+    //mappings
+
     //here to save the data to the blockchain we are using maps so we can access the values as key is always unique
     //this has more advantage than this Item[] public items;(array instead of map) then in function calling items.push(Items(...)) (intestead of the memory part) and storing on bc
     mapping(uint256 => Item) public items;
@@ -69,7 +75,13 @@ contract Dzon {
         // 1.SOMEONE FROM FRONTENT CAN SUSCIRBE TO THE EVENT IN ORDER TO GET A NOTIFICATION ABOUT IT LIKE ON PHONE ON FRONTEND
         // 2.VERY EASILY THIS CAN BE FOUND ON BLOCKCHAIN AND BLOCK WHEN IT WAS CALLED ANDSTUFF
     }
-    //Buy Products
 
+
+    //Buy Products
+    //payable will allow the function to receive ether to buy the prodcut
+    //buyer sends ehter from frontend(website) which goes in SC,now when the buyer pay for a product a Order id/xyz will be generated that will store their order
+    function buyProduct(uint256 prod_id) public payable{ 
+
+    }
     //Withdraw funds
 }
