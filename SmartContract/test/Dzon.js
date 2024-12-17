@@ -51,8 +51,8 @@ describe("Dzon", function () {
   beforeEach(async () => {
     //get owners adrress
     [deployer, buyer] = await ethers.getSigners();
-    console.log("Deployers address :", deployer.address);
-    console.log("Buyers address :", buyer.address);
+    // console.log("Deployers address :", deployer.address);
+    // console.log("Buyers address :", buyer.address);
 
     //deploying the contract
     const Dapp = await ethers.getContractFactory("Dzon");
@@ -136,13 +136,28 @@ describe("Dzon", function () {
 
     it("Updates the contracts balance ", async () => {
       console.log("Old Ethe value in contract acc : ",initialBalance);
+
       const newBalance = await ethers.provider.getBalance(dAppAddress);
       console.log("New Balance:", newBalance);
+
       const checkCost= newBalance - initialBalance;
       console.log("CheckCost Balance:", checkCost);
       
       // Check if the balance increased by COST
       expect(checkCost).to.equal(COST);
+    })
+    it("Checking if buyers Order count Updates ", async () => {
+      const result = await dApp.orderCount(buyer.address)
+      // Check if the balance increased by COST
+      console.log("The value of Order Id is : ",result);
+      expect(result).to.equal(1);
+    })
+    it("Checking if Order was added ", async () => {
+      const order = await dApp.orders(buyer.address , 1);
+      console.log(order);
+      
+      expect(order.item.name).to.equal(NAME);
+      expect(order.time).to.greaterThan(0);
     })
 
   })
