@@ -8,5 +8,60 @@
     =>will store it here and then put a reference in the block so can be accessed
     =>same way as we store URL for image or vidoe on mongodb but the video is on cloudinary but they are just centralized this one isnt
 
+3.In the iginition file using m.getPatameters does not work 
+so to solve it do the same prcoess like create paramater.json file in ignition and then import it and then use it normalyy 
 
-3.for test/Dzon.js 
+
+//FOR FORNTEND/APP.JS
+
+4.but when we have already connected our metamask to app with 
+const accounts = await window.ethereum.request({method:'eth_requestAccounts'}); 
+this then why to do this  const provider = new ethers.BrowserProvider(window.ethereum); ??
+
+ANS=>
+    Why do we need the provider even after connecting MetaMask?
+    When you connect MetaMask to your app with:
+
+    javascript
+    Copy code
+    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    This allows your app to access the user's MetaMask account (the wallet address) and get the list of accounts. However, this doesn't give your app the ability to interact with the Ethereum blockchain itself in a structured way. The connection to MetaMask enables access to the wallet, but to interact with the blockchain (e.g., reading smart contract data, sending transactions), you need a provider.
+
+    Here’s what each part does:
+
+    1. MetaMask Connection (eth_requestAccounts):
+    What it does: This just connects your app to MetaMask and allows access to the user's Ethereum accounts. It gives you their account address (like 0x123...).
+    What it doesn't do: It doesn't let you interact with the Ethereum network (read/write data on the blockchain). You still need a provider to connect to the network.
+    2. Provider (ethers.BrowserProvider(window.ethereum)):
+    What it does: A provider gives you access to the Ethereum network (the blockchain). This is what allows you to read data from the blockchain, interact with smart contracts, etc.
+    What it doesn't do: It doesn’t give you the ability to send transactions (change the state of the blockchain). For that, you need a signer.
+    Why both?
+    MetaMask is like your Ethereum wallet (where your accounts and private keys are stored).
+    Provider is like the "bridge" to the Ethereum network, enabling your app to communicate with the blockchain and get information (like balances, contract data, etc.).
+    3.
+    Signer: A signer is like a "creator" or "changer" on the blockchain. It allows you to send transactions (such as transferring tokens or updating data in a smart contract).
+    When you send a transaction, you're signing it with your private key to prove it's you who is initiating the action.
+    Example in a Real-World Scenario:
+    Provider: Think of it like a library where you go to read books (get information from the blockchain). You can only look at books (data) but cannot write in them.
+    Signer: A signer is like the librarian who can write or update information in the books (signing and sending transactions to the blockchain).
+
+
+
+4.NetworkchainId: (...)name: (...)plugins: (...)[[Prototype]]: Object 
+how am i still getting this in the console when i stoped the local network and disconnected the account from meta mask ??    const provider = new ethers.BrowserProvider(window.ethereum);
+    setProvider(provider);
+
+ANS=>
+    Understanding the Scenario:
+    MetaMask and window.ethereum:
+
+    window.ethereum is an object provided by MetaMask that interacts with the Ethereum network. Even when you're not connected to a network or have disconnected your MetaMask account, MetaMask itself remains active in the browser.
+    window.ethereum can still expose some basic details about the current state of MetaMask, such as the network MetaMask was last connected to.
+    Provider with ethers.BrowserProvider(window.ethereum):
+
+    When you create a provider using new ethers.BrowserProvider(window.ethereum), it interacts with MetaMask and can still retrieve details about the last known network that MetaMask was connected to. This includes information like chainId, name, etc.
+    Even if the local network is stopped or the account is disconnected, MetaMask may still provide this data as it holds information about the last known state (network and account).
+    Hardhat Network and MetaMask:
+
+    When you're using Hardhat's local network with npx hardhat node, MetaMask could have been connected to it previously.
+    If the local network is stopped but MetaMask still has the last network state cached, the provider might still retrieve this cached information.
