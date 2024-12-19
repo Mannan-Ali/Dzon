@@ -120,6 +120,9 @@ describe("Dzon", function () {
     let transaction,dAppAddress,initialBalance;
     beforeEach(async () => {
       //as a contract that you’re deploying, so you should get its address using this way not normal dApp.address
+      //he dApp address refers to the smart contract's address on the blockchain.
+      // How is it created?
+      // When a smart contract is deployed on the blockchain, it is assigned a unique address by the Ethereum Virtual Machine (EVM).
       dAppAddress = await dApp.getAddress();
       //list item for to execute buy
       transaction = await dApp.connect(deployer).list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
@@ -159,6 +162,35 @@ describe("Dzon", function () {
       expect(order.item.name).to.equal(NAME);
       expect(order.time).to.greaterThan(0);
     })
+  })
+  describe("Checking Withdrawal function : ", ()=>{
+    let transaction,dAppAddress,balanceBeforeWithdraw;
+    beforeEach(async ()=>{
+      dAppAddress = await dApp.getAddress();
 
+      transaction = await dApp.connect(deployer).list(ID, NAME, CATEGORY, IMAGE, COST, RATING, STOCK);
+      await transaction.wait();
+
+      transaction = await dApp.connect(buyer).buyProduct(ID,{ value : COST });
+      await transaction.wait();
+      
+      balanceBeforeWithdraw = await ethers.provider.getBalance(deployer.address);
+
+      transaction = await dApp.connect(deployer).withdraw();
+      await transaction.wait();
+    })
+    it("Check Withdrawing of money : ",async ()=>{
+      const balanceAfterWithdraw = await ethers.provider.getBalance(deployer.address);
+      console.log(balanceBeforeWithdraw);  
+      console.log(balanceAfterWithdraw);
+      expect(balanceAfterWithdraw).to.be.gt(balanceBeforeWithdraw);
+    })
+
+    it("Check if any amount left in contract balance : ",async ()=>{
+      const balanceInContract = await ethers.provider.getBalance(dAppAddress);
+      console.log(balanceInContract);
+      
+      expect(balanceInContract).to.be.equal(0);
+    })
   })
 });
