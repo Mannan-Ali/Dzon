@@ -4,9 +4,10 @@ import { ethers } from "ethers";
 
 //components
 import Navigation from "./components/Navigation";
-import Rating from "./components/Rating";
-import Product from "./components/Product";
+//Note this is the general area for different product
 import Section from "./components/Section";
+//now when user clicks on a product thats what in here
+import Product from "./components/Product";
 
 //utils
 import abi from "./utils/abi.json";
@@ -16,7 +17,24 @@ function App() {
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
   const [dApp, setdApp] = useState(null);
-  const [wc, setwc] = useState(null);
+
+  const [elec, setelec] = useState(null);
+  const [cloth, setcloth] = useState(null);
+  const [toys, settoys] = useState(null);
+
+  //this whole part is for what haapens when you click a product in a section
+  //that will take you to more defined page of the product where you can see about the product
+
+  const [item, setitem] = useState(null);
+  //if true go to the product page
+  const [toggle, setToggle] = useState(false);
+
+  const togglePop = (item) => {
+    // this item is the single product from the section.jsx part
+    setitem(item);
+    //if we are on the page then go back and if are not then go on the page
+    toggle ? setToggle(false) : setToggle(true);
+  };
   //now we will use ether js in here to convert the fronntend to blockchain application
   //in navbar we only have coonected the metamask that is making the browser for our frontend compatibale wiht bc
   const loadBcData = async () => {
@@ -75,15 +93,26 @@ function App() {
     setdApp(dApp);
 
     //load products
+    //already listed product
     const items = [];
-    const item = await dApp.items(1);
-    items.push(item);
+    for (var i = 0; i < 9; i++) {
+      const item = await dApp.items(i + 1); //1 to 9
+      items.push(item);
+    }
     console.log(items);
 
-    const ele = item.category;
-    setwc(ele);
-    console.log(ele);
-    
+    const electronics = items.filter((item) => {
+      return item.category === "electronics";
+    });
+    const clothing = items.filter((item) => {
+      return item.category === "clothing";
+    });
+    const toys = items.filter((item) => {
+      return item.category === "toys";
+    });
+    setelec(electronics);
+    setcloth(clothing);
+    settoys(toys);
   };
   useEffect(() => {
     loadBcData();
@@ -92,11 +121,25 @@ function App() {
     <>
       <Navigation account={account} setAccount={setAccount} />
       <h2>Dzon&apos;s Best Seller</h2>
-
-      {wc}
-      <Rating />
-      <Product />
-      <Section />
+      {elec && cloth && toys && (
+        <div>
+          <Section
+            title={"Clothing & Jewelry"}
+            items={cloth}
+            togglePop={togglePop}
+          />
+          <Section
+            title={"Electronics & Gadgets"}
+            items={elec}
+            togglePop={togglePop}
+          />
+          <Section title={"Toys & Gaming"} items={toys} togglePop={togglePop} />
+        </div>
+      )}
+      {/* if toggle is not true go back up */}
+      {toggle && 
+      (<Product item ={item} provider ={provider} account = {account} dApp ={dApp} togglePop={togglePop}/>)
+      }
     </>
   );
 }
