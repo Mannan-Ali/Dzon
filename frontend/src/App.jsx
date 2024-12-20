@@ -85,6 +85,7 @@ function App() {
     If you just need to read data (like fetching a value from a contract), pass a provider.
     If you need to send transactions (like calling functions that modify the contract state), pass a signer.
     */
+    //Remember one thing the way we do test for SmartContract same way we call the functions here just a little name difference
     const dApp = new ethers.Contract(
       config[network.chainId].Dzon.address,
       abi,

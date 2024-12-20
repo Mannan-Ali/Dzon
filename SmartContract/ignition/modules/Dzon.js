@@ -31,18 +31,44 @@ module.exports = buildModule("DzonModule", (m) => {
   // m.call(DzonApp, "list", [ID,NAME, CATEGORY, IMAGE, COST, RATING, STOCK]);
 
 
-  m.call(DzonApp, "list",
-    [
-      items[0].id,
-      items[0].name,
-      items[0].category,
-      items[0].image,
-      ethers.parseUnits(items[0].price, "wei"),
-      items[0].rating,
-      items[0].stock,
-    ]
-  )
+  // m.call(DzonApp, "list",
+  //   [
+  //     items[0].id,
+  //     items[0].name,
+  //     items[0].category,
+  //     items[0].image,
+  //     ethers.parseUnits(items[0].price, "wei"),
+  //     items[0].rating,
+  //     items[0].stock,
+  //   ]
+  // )
 
+  items.forEach((item, index) => {
+    if (
+      !item.id ||
+      !item.name ||
+      !item.category ||
+      !item.image ||
+      !item.price ||
+      !item.rating ||
+      !item.stock
+    ) {
+      console.error(`Item at index ${index} is missing required fields`, item);
+      return; // Skip this item
+    }
+
+    m.call(DzonApp, "list", [
+      item.id,
+      item.name,
+      item.category,
+      item.image,
+      ethers.parseUnits(item.price.toString(), 'ether'), //converts to wei
+      item.rating,
+      item.stock,
+    ],{
+      id: `DzonModule_Dzon_list_${index}_${Date.now()}`, // Ensure each ID is unique
+    });
+  });
   return { DzonApp };
 });
 
