@@ -44,19 +44,6 @@ module.exports = buildModule("DzonModule", (m) => {
   // )
 
   items.forEach((item, index) => {
-    if (
-      !item.id ||
-      !item.name ||
-      !item.category ||
-      !item.image ||
-      !item.price ||
-      !item.rating ||
-      !item.stock
-    ) {
-      console.error(`Item at index ${index} is missing required fields`, item);
-      return; // Skip this item
-    }
-
     m.call(DzonApp, "list", [
       item.id,
       item.name,
