@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import star_regular from '../assets/img/star-regular.svg';
 import star_solid from '../assets/img/star-solid.svg';
 function Rating(props) {

@@ -21,9 +21,7 @@ this then why to do this  const provider = new ethers.BrowserProvider(window.eth
 ANS=>
     Why do we need the provider even after connecting MetaMask?
     When you connect MetaMask to your app with:
-
-    javascript
-    Copy code
+    
     const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
     This allows your app to access the user's MetaMask account (the wallet address) and get the list of accounts. However, this doesn't give your app the ability to interact with the Ethereum blockchain itself in a structured way. The connection to MetaMask enables access to the wallet, but to interact with the blockchain (e.g., reading smart contract data, sending transactions), you need a provider.
 

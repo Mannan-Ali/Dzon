@@ -136,8 +136,8 @@ contract Dzon {
     //the money that is sent to the contract can we withdrawn by the owner here
     function withdraw() public chkWhoisCalling{
         //call is better than transfer but also riskyas gas is not specified here
-        //here this is means the contract that contains the function ans address(this) means contract address balance or ehter it has
-        (bool success,) = owner.call{value:address(this).balance}("");//("") Means no data payload is included that is you are not calling any function
+        //here this is means the contract that contains the function and address(this) means contract address balance or ehter it has
+        (bool success,) = owner.call{value:address(this).balance}("");//("") Means no data payload is included that is you are not calling any function from this part like receving ehter in here then using it to call other func
         require(success);
     }
 }

@@ -53,7 +53,7 @@ function App() {
       Think of it as a translator between your app and the blockchain.
      */
     /*
-    Read about
+    Read about file
     THERE ARE 2 HERE LIKE THIS ONE IS PROVIDER AND THE OTHER IS SIGNER
     */
     const provider = new ethers.BrowserProvider(window.ethereum);
@@ -68,9 +68,11 @@ function App() {
     //to do this we need 3 thing
     // 1.addrees of smartContract - we get it when we deploy or run the ignigtion file save it somewhere
     // here we have stored that stuff in config file
+    //now we can direclty use 31337 the number but we do it like a check if the network is hardaht then the network.chainId will return 31337 so its work dynamically as check also 
     //2. abi -> we can get it in articats/contracts//Dzon.sol/Dzon.json'
     //easy way is to copy the abi from there to another json file and use that here.
     /*
+    the default chain ID for the Hardhat Network is still 31337 as of today
     3.network.chainId = 31337 so we are using dynamically from above network here 
     provider or signer (The third parameter):
 
